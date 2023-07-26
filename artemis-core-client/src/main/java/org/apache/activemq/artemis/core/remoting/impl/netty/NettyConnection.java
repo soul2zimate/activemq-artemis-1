@@ -112,7 +112,8 @@ public class NettyConnection implements Connection {
       //this is the reason why writeBufferHighWaterMark is passed as an argument
       final int bytesBeforeUnwritable = (int) channel.bytesBeforeUnwritable();
       assert bytesBeforeUnwritable >= 0;
-      final int writtenBytes = writeBufferHighWaterMark - bytesBeforeUnwritable;
+      // Channel#bytesBefore[un]writable off by 1 via https://github.com/netty/netty/pull/13389 in Netty 4.1.93.Final.
+      final int writtenBytes = writeBufferHighWaterMark - bytesBeforeUnwritable + 1;
       assert writtenBytes >= 0;
       return writtenBytes;
    }
